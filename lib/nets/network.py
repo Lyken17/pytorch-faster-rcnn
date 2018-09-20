@@ -465,11 +465,11 @@ class Network(nn.Module):
     train_op.zero_grad()
     self._losses['total_loss'].backward()
     train_op.step()
-    summary = self._run_summary_op()
+    # summary = self._run_summary_op()
 
     self.delete_intermediate_states()
 
-    return rpn_loss_cls, rpn_loss_box, loss_cls, loss_box, loss, summary
+    return rpn_loss_cls, rpn_loss_box, loss_cls, loss_box, loss, None# summary
 
   def train_step_no_return(self, blobs, train_op):
     self.forward(blobs['data'], blobs['im_info'], blobs['gt_boxes'])
