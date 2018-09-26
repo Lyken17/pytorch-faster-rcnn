@@ -18,6 +18,8 @@ import time, os, sys
 from nets.vgg16 import vgg16
 from nets.resnet_v1 import resnetv1
 from nets.mobilenet_v1 import mobilenetv1
+from nets.mobilenet_v2 import mobilenetv2
+from nets.mobilenas import mobilenas
 
 import torch
 
@@ -95,6 +97,10 @@ if __name__ == '__main__':
     net = resnetv1(num_layers=152)
   elif args.net == 'mobile':
     net = mobilenetv1()
+  elif args.net == 'mnet':
+    net = mobilenetv2()
+  elif args.net == 'mnas':
+    net = mobilenas()
   else:
     raise NotImplementedError
 
