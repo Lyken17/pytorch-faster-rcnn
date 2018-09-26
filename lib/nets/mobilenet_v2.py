@@ -58,10 +58,34 @@ class InvertedResidual(nn.Module):
 		else:
 			return self.conv(x)
 
+class Adapt2CaffeData(nn.Module):
+	'''
+	The Caffe's way to preprocess data
+	IMG = (IMG - MEAN) | IMG:(0, 255)
+	Torch's way to preprocess data
+	IMG = (IMG - MEAN) / VAR | IMG:(0, 1)
+	'''
+	def __init__(self):
+		self.vars = (0.229, 0.224, 0.225)
+
+	def forward(self, input):
+		'''
+		:param input: N, C, H, HW
+		:return:
+		'''
+		input = input / 255.0 # Adjust range
+		input = input[:, ::-1, :, :] # BGR to RGB
+		for idx, v in self.vars: # Normalize by vars
+			input[:, idx, :, :] /= v
+		return input
+
+
 
 class MobileNetV2(nn.Module):
 	def __init__(self, n_class=1000, input_size=224, width_mult=1.):
 		super(MobileNetV2, self).__init__()
+		self.preprocess = Adapt2CaffeData()
+
 		block = InvertedResidual
 		input_channel = 32
 		last_channel = 1280
@@ -93,6 +117,7 @@ class MobileNetV2(nn.Module):
 		self._initialize_weights()
 
 	def forward(self, x):
+		x = self.preprocess(x)
 		x = self.features(x)
 		print(x.size())
 		x = x.mean(3).mean(2)
@@ -120,7 +145,7 @@ def mnet_v2(pretrained=False):
 	if pretrained:
 		url = "http://file.lzhu.me/pytorch/models/mobilenet_v2-ecbe2b56.pth.tar"
 		fp = model_zoo.load_url(url, map_location="cpu")
-		model.load_state_dict(fp)
+		model.load_state_dict(fp, strict=False)
 	return model
 
 
@@ -214,10 +239,10 @@ class mobilenetv2(Network):
 
 	def load_pretrained_cnn_from_url(self, url="http://file.lzhu.me/pytorch/models/mobilenet_v2-ecbe2b56.pth.tar"):
 		fp = model_zoo.load_url(url, map_location="cpu")
-		self.mobilenet.load_state_dict(fp)
+		self.mobilenet.load_state_dict(fp, strict=False)
 
 	def load_pretrained_cnn(self, state_dict):
-		Warning("This API should NOT be called when using MobileNet V2")
+		DeprecationWarning("This API should NOT be called when using MobileNet V2")
 		print('Warning: No available pretrained model yet')
 		self.mobilenet.load_state_dict({k: state_dict['features.' + k] for k in list(self.mobilenet.state_dict())})
 		# url = "http://file.lzhu.me/pytorch/models/mobilenet_v2-ecbe2b56.pth.tar"
