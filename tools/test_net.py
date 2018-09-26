@@ -101,6 +101,10 @@ if __name__ == '__main__':
     net = mobilenetv2()
   elif args.net == 'mnas':
     net = mobilenas()
+  elif args.net == 'mcpu':
+    net = mobilenas(key="cpu")
+  elif args.net == 'mgpu':
+    net = mobilenas(key="gpu")
   else:
     raise NotImplementedError
 
