@@ -130,6 +130,7 @@ def mnet_v2(pretrained=False):
 		model.load_state_dict(fp, strict=False)
 	return model
 
+from .modules.layers import ConvLayer
 
 class mobilenetv2(Network):
 	def __init__(self):
@@ -189,6 +190,8 @@ class mobilenetv2(Network):
 
 		# Add weight decay
 		def l2_regularizer(m, wd, regu_depth):
+			if isinstance(m, ConvLayer):
+				return
 			if m.__class__.__name__.find('Conv') != -1:
 				if regu_depth or m.groups == 1:
 					m.weight.weight_decay = wd
