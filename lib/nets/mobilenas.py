@@ -102,8 +102,10 @@ class mobilenas(Network):
 		# Build mobilenet.
 		# self._layers['head'] = nn.Sequential(*list(self.mobilenet.children())[:12])
 		# self._layers['tail'] = nn.Sequential(*list(self.mobilenet.children())[12:])
-		self._layers['head'] = nn.Sequential(*list(self.mobilenet.features.children())[:-1])
-		self._layers['tail'] = nn.Sequential(*list(self.mobilenet.features.children())[-1:])
+		self._layers['head'] = nn.Sequential(
+			*([self.mobilenet.first_conv, ] + list(self.mobilenet.blocks.children()))
+		)
+		self._layers['tail'] = self.mobilenet.feature_mix_layer
 
 	def train(self, mode=True):
 		# Override train so that the training mode is set as we want
