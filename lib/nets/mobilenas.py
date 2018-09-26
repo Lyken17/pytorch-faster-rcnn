@@ -88,9 +88,10 @@ class mobilenas(Network):
 
 		# Add weight decay
 		def l2_regularizer(m, wd, regu_depth):
-			if isinstance(m, ConvLayer):
-				return
-			if m.__class__.__name__.find('Conv') != -1:
+			# if isinstance(m, ConvLayer):
+			# 	return
+			# if m.__class__.__name__.find('Conv') != -1:
+			if isinstance(m, (nn.modules.conv._ConvNd)):
 				if regu_depth or m.groups == 1:
 					m.weight.weight_decay = wd
 				else:
