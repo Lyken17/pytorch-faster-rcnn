@@ -37,6 +37,9 @@ class mobilenas(Network):
 		self._net_conv_channels = self.mobilenet.feature_mix_layer.in_channels
 		self._fc7_channels = self.mobilenet.feature_mix_layer.in_channels * 4
 
+		if key == "cpu":
+			self._net_conv_channels = 360
+			self._fc7_channels = 1432
 
 	def init_weights(self):
 		def normal_init(m, mean, stddev, truncated=False):
