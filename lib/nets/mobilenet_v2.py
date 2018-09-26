@@ -212,9 +212,14 @@ class mobilenetv2(Network):
 
 			self.mobilenet.apply(set_bn_eval)
 
-	def load_pretrained_cnn(self, state_dict):
-		# print('Warning: No available pretrained model yet')
-		# self.mobilenet.load_state_dict({k: state_dict['features.' + k] for k in list(self.mobilenet.state_dict())})
-		url = "http://file.lzhu.me/pytorch/models/mobilenet_v2-ecbe2b56.pth.tar"
+	def load_pretrained_cnn_from_url(self, url="http://file.lzhu.me/pytorch/models/mobilenet_v2-ecbe2b56.pth.tar"):
 		fp = model_zoo.load_url(url, map_location="cpu")
 		self.mobilenet.load_state_dict(fp)
+
+	def load_pretrained_cnn(self, state_dict):
+		Warning("This API should NOT be called when using MobileNet V2")
+		print('Warning: No available pretrained model yet')
+		self.mobilenet.load_state_dict({k: state_dict['features.' + k] for k in list(self.mobilenet.state_dict())})
+		# url = "http://file.lzhu.me/pytorch/models/mobilenet_v2-ecbe2b56.pth.tar"
+		# fp = model_zoo.load_url(url, map_location="cpu")
+		# self.mobilenet.load_state_dict(fp)

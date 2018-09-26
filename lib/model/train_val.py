@@ -166,9 +166,15 @@ class SolverWrapper(object):
 		np_paths = []
 		ss_paths = []
 		# Fresh train directly from ImageNet weights
-		print('Loading initial model weights from {:s}'.format(self.pretrained_model))
-		self.net.load_pretrained_cnn(torch.load(self.pretrained_model))
-		print('Loaded.')
+		if not hasattr(self.net, "load_pretrained_cnn_from_url"):
+			print('Loading initial model weights from {:s}'.format(self.pretrained_model))
+			self.net.load_pretrained_cnn(torch.load(self.pretrained_model))
+			print('Loaded.')
+		else:
+			# Temporary fix for Mobilnet V2.
+			print("Loading initial model weights from URL")
+			self.net.load_pretrained_cnn_from_url()
+			print("Loaded.")
 		# Need to fix the variables before loading, so that the RGB weights are changed to BGR
 		# For VGG16 it also changes the convolutional weights fc6 and fc7 to
 		# fully connected weights
