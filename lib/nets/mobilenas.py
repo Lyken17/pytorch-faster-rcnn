@@ -22,7 +22,7 @@ from nets.network import Network
 from model.config import cfg
 from .utils import Adapt2CaffeData, load_url, download_url
 from .nasnet import nasnet, nas_cpu, nas_gpu
-from .modules.layers import ConvLayer
+from .modules.layers import ConvLayer, BasicUnit
 
 class mobilenas(Network):
 	def __init__(self, key="gpu"):
@@ -44,6 +44,8 @@ class mobilenas(Network):
 			weight initalizer: truncated normal and random normal.
 			"""
 			if m.__class__.__name__.find('Conv') == -1:
+				return
+			if isinstance(m, BasicUnit):
 				return
 			if truncated:
 				m.weight.data.normal_().fmod_(2).mul_(stddev).add_(mean)  # not a perfect approximation
