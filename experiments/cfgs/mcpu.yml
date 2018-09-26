@@ -1,4 +1,4 @@
-EXP_DIR: nasnet_cpu
+EXP_DIR: mcpu
 TRAIN:
   HAS_RPN: True
   IMS_PER_BATCH: 1
