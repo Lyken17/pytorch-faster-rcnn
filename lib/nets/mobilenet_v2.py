@@ -66,6 +66,7 @@ class Adapt2CaffeData(nn.Module):
 	IMG = (IMG - MEAN) / VAR | IMG:(0, 1)
 	'''
 	def __init__(self):
+		super(Adapt2CaffeData, self).__init__()
 		self.vars = (0.229, 0.224, 0.225)
 
 	def forward(self, input):
